@@ -26,10 +26,36 @@ def union2Images(i1, i2):
     return img3
     
 def checkForEquality(i1, i2):
-    if exactlyEqual(i1, i2):
+    img1 = i1
+    img2 = i2    
+    if isinstance(i1, basestring) and isinstance(i2, basestring):
+        img1 = Images1[i1]
+        img2 = Images1[i2]
+    elif isinstance(i1, basestring) and not isinstance(i2, basestring):
+        if img2.getbands() == ('1',):
+            img1 = Images1[i1]
+        else:
+            img1 = rgbImages[i1]
+    elif isinstance(i2, basestring) and not isinstance(i1, basestring):
+        if img1.getbands() == ('1',):
+            img2 = Images1[i2]
+        else:
+            img2 = rgbImages[i2]
+    
+    '''if isinstance(i1, basestring):
+        img1 = rgbImages[i1]
+    else:
+        img1 = i1
+
+    if isinstance(i2, basestring):
+        img2 = rgbImages[i2]
+    else:
+        img2 = i2'''
+
+    if exactlyEqual(img1, img2):
         #print 'images ', i1, ' and', i2, ' exactly equal.'
         return True
-    elif almostEqual(i1, i2):
+    elif almostEqual(img1, img2):
         # diff = rmsdiff(Images['A'], Images['B'])  # rms diff does not work - returns 0
                                                     # even for images rotated/reflected
         #print 'images ', i1, ' and', i2, ' almost equal.'
@@ -37,17 +63,7 @@ def checkForEquality(i1, i2):
     return False
 
 # Taken from: http://effbot.org/zone/pil-comparing-images.htm
-def exactlyEqual(i1, i2):
-    if isinstance(i1, basestring):
-        img1 = rgbImages[i1]
-    else:
-        img1 = i1
-
-    if isinstance(i2, basestring):
-        img2 = rgbImages[i2]
-    else:
-        img2 = i2
-
+def exactlyEqual(img1, img2):
     diff = ImageChops.difference(img1, img2).getbbox()
     if diff is None:
         return True
@@ -55,8 +71,8 @@ def exactlyEqual(i1, i2):
         return False
 
 
-def almostEqual(i1, i2):
-    if isinstance(i1, basestring):
+def almostEqual(img1, img2):
+    '''if isinstance(i1, basestring):
         img1 = rgbImages[i1]
     else:
         img1 = i1
@@ -64,7 +80,7 @@ def almostEqual(i1, i2):
     if isinstance(i2, basestring):
         img2 = rgbImages[i2]
     else:
-        img2 = i2
+        img2 = i2'''
 
     img1Data = img1.getdata()
     img2Data = img2.getdata()
@@ -76,7 +92,7 @@ def almostEqual(i1, i2):
         black = 0
     else:
         black = (0, 0, 0)
-    print 'comparing for almost equal', i1, i2
+    #print 'comparing for almost equal', i1, i2
     img1colors = img1.getcolors()
     img2colors = img2.getcolors()
     print 'img1bands, black = ', img1.getbands(), black
@@ -338,9 +354,7 @@ class Agent:
                 predictedSolution = union2Images('F', 'H')
                 print 'type of predictedSolution = ', type(predictedSolution)
                 for i in ['1', '2', '3', '4', '5', '6', '7', '8']:
-                    #solution = checkForEquality(predictedSolution, i)
-                    if almostEqual(predictedSolution, i):
-                        print 'solution found'
+                    solution = identifySolution(predictedSolution)
                     if solution != -1:
                         return solution
                 
