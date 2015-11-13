@@ -1,4 +1,5 @@
 # Your Agent for solving Raven's Progressive Matrices. You MUST modify this file.
+# Your Agent for solving Raven's Progressive Matrices. You MUST modify this file.
 #
 # You may also create and submit new files in addition to modifying this file.
 #
@@ -17,9 +18,13 @@ rgbImages = {}
 grayscaleImages = {}
 Images1 = {}
 
-SIMILARITY_THRESHOLD = 500
+SIMILARITY_THRESHOLD = 550
 solutionImageList = []
 
+def union2Images(i1, i2):
+    img3 = ImageChops.logical_and(Images1[i1], Images1[i2])
+    return img3
+    
 def checkForEquality(i1, i2):
     if exactlyEqual(i1, i2):
         #print 'images ', i1, ' and', i2, ' exactly equal.'
@@ -47,7 +52,6 @@ def exactlyEqual(i1, i2):
     if diff is None:
         return True
     else:
-        #print 'diff = ', diff
         return False
 
 
@@ -67,38 +71,68 @@ def almostEqual(i1, i2):
     img1BlackCount = 0
     img2BlackCount = 0
     same = 0
-    #print 'comparing for almost equal', i1, i2
+    black = None
+    if img1.getbands() == ('1',): # getbands return ('1',) for bilevel images
+        black = 0
+    else:
+        black = (0, 0, 0)
+    print 'comparing for almost equal', i1, i2
     img1colors = img1.getcolors()
     img2colors = img2.getcolors()
+    print 'img1bands, black = ', img1.getbands(), black
     for pixelCount, rgb in img1colors:
-        if rgb == (0, 0, 0):
+        #print 'type of pixelCount, rgb = ', type(pixelCount), type(rgb)
+        if rgb == black: #(0, 0, 0):
+            print 'pixelCount, rgb = ', pixelCount, rgb
             img1BlackCount = pixelCount
     for pixelCount, rgb in img2colors:
-        if rgb == (0, 0, 0):
+        if rgb == black: #(0, 0, 0):
+            print 'pixelCount, rgb = ', pixelCount, rgb
             img2BlackCount = pixelCount
 
     for pix1, pix2 in zip(img1Data, img2Data):
         #print 'pix1, pix2 = ', pix1, pix2
-        if pix1 == (0, 0, 0):
+        if pix1 == black: #(0, 0, 0):
             if pix1 == pix2:
                 same += 1
     print 'img1BlackCount , img2BlackCount, same = ', img1BlackCount, img2BlackCount, same
     if abs(img1BlackCount - img2BlackCount) <= SIMILARITY_THRESHOLD and \
                     img1BlackCount - same <= SIMILARITY_THRESHOLD and \
                             img2BlackCount - same <= SIMILARITY_THRESHOLD:
-
+        print 'returning from SIMILARITY_THRESHOLD check'
         return True
 
-    if float(same)/float(img1BlackCount) > 0.95 and float(same)/float(img2BlackCount) > 0.95:
+    if float(same)/(float(img1BlackCount) + 0.00001) >= 0.939 and float(same)/(float(img2BlackCount) + 0.00001) >= 0.939:
+        print 'returning from percentage check'
         return True
 
     return False
 
-def checkForFill(i1, i2):
-    img1 = rgbImages[i1].filter(ImageFilter.FIND_EDGES)
-    img2 = rgbImages[i2].filter(ImageFilter.FIND_EDGES)
-
-    return checkForEquality(img1, img2)
+def checkForAdds(i1, i2):
+    img1 = Images1[i1]
+    img2 = Images1[i2]
+    img3 = ImageChops.logical_and(img1, img2)
+    #print 'img1 bands = ', img1.getbands()
+    #print 'img2 bands = ', img1.getbands()
+    #print 'img3 bands = ', img1.getbands()
+    #img3.show()
+    #for i in img3.getdata():
+    #    print i
+    #print 'comapring i1 and AandB'
+    return checkForEquality(img2, img3)
+    
+def checkForDeletes(i1, i2):
+    img1 = Images1[i1]
+    img2 = Images1[i2]
+    img3 = ImageChops.logical_or(img1, img2)
+    #print 'img1 bands = ', img1.getbands()
+    #print 'img2 bands = ', img1.getbands()
+    #print 'img3 bands = ', img1.getbands()
+    #img3.show()
+    #for i in img3.getdata():
+    #    print i
+    #print 'comapring i1 and AandB'
+    return checkForEquality(img2, img3)
 
 def checkForReflection(i1, i2, reflectionType, problem):
     img1 = rgbImages[i1]
@@ -198,7 +232,7 @@ class Agent:
         print 'problem: ', problem.name
         openAllImages(problem)
         # print ImageChops.difference(Images['A'], Images['B']).getbbox()
-        #if problem.name != 'Basic Problem B-09':
+        #if problem.name != 'Basic Problem B-11':
         #    return -1
 
         predictedSolution = ''
@@ -244,23 +278,50 @@ class Agent:
                     return solution
 
             print 'checking for fills between A and B'
-            if checkForFill('A', 'B'):
+            if checkForAdds('A', 'B'):
                 print 'B is a filled version of A'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    if checkForAdds('C', i):
+                        solution = int(i)
+                if solution != -1:
+                    return solution
 
-
+            print 'checking for deletes between A and B'
+            # deletes from A to B is same as adds from B to A
+            if checkForAdds('B', 'A'):
+                print 'A is a filled version of B'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    print 'comparing C and ', i
+                    if checkForAdds(i, 'C'):
+                        print 'C is similar to', i
+                        solution = int(i)
+                    if solution != -1:
+                        return solution                    
+                    
+            print 'checking for fills between A and C'
+            if checkForAdds('A', 'C'):
+                print 'C is a filled version of A'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    if checkForAdds('B', i):
+                        solution = int(i)
+                if solution != -1:
+                    return solution        
+        # Method to find filled version - does not work
         #ImageDraw.floodfill(Images['A'], xy, (0, 0, 0), border=None)
-        mask = Images['A'].convert('L')
-        th=150 # the value has to be adjusted for an image of interest
-        mask = mask.point(lambda i: i < th and 255)
+        #mask = Images['A'].convert('L')
+        #th=150 # the value has to be adjusted for an image of interest
+        #mask = mask.point(lambda i: i < th and 255)
         #mask.show()
         #print 'mask = ', mask
         #for x in mask.getdata():
         #    print x
 
+        # Method to find filled version - works but may not be the right method
         #Images['B'].filter(ImageFilter.FIND_EDGES).show()
         #for x in Images['A'].convert('L').getdata():
         #    print x
         #print 'A histogram = ', Images1['A'].getdata()
+
 
         if problem.problemType == '3x3':
             if checkForEquality('A', 'B') and checkForEquality('B', 'C'):
@@ -270,4 +331,18 @@ class Agent:
                     if solution != -1:
                         return solution
 
+            if checkForEquality(union2Images('B', 'D'), Images1['E']) and \
+                checkForEquality(union2Images('C', 'E'), Images1['F']) and \
+                checkForEquality(union2Images('E', 'G'), Images1['H']):
+                print 'type is union'
+                predictedSolution = union2Images('F', 'H')
+                print 'type of predictedSolution = ', type(predictedSolution)
+                for i in ['1', '2', '3', '4', '5', '6', '7', '8']:
+                    #solution = checkForEquality(predictedSolution, i)
+                    if almostEqual(predictedSolution, i):
+                        print 'solution found'
+                    if solution != -1:
+                        return solution
+                
+                        
         return solution
