@@ -1,48 +1,87 @@
-            im = Images1['A']
-            pixels = list(im.getdata())
-            width, height = im.size
-            pixels = [pixels[i * width:(i + 1) * width] for i in xrange(height)]
-            print len(pixels)
-            print pixels[60][56]
-            for x in range(len(pixels)):
-                print pixels[x]
+# Your Agent for solving Raven's Progressive Matrices. You MUST modify this file.
+# Your Agent for solving Raven's Progressive Matrices. You MUST modify this file.
+#
+# You may also create and submit new files in addition to modifying this file.
+#
+# Make sure your file retains methods with the signatures:
+# def __init__(self)
+# def Solve(self,problem)
+#
+# These methods will be necessary for the project's main method to run.
 
+# Install Pillow and uncomment this line to access image processing.
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
+import math, operator
 
+Images = {}
+rgbImages = {}
+grayscaleImages = {}
+Images1 = {}
+
+SIMILARITY_THRESHOLD = 550
+solutionImageList = []
 
 
 # taken from - http://www.labbookpages.co.uk/software/imgProc/blobDetection.html
 def checkObjectCountType(problem):
     solution = -1
-    imgData = Images1['A'].getdata()
-    pixels = Images1['A'].load()
-    print 'pixels =', pixels
-    maxxy = Images1['A'].size
+    im = Images1['C']
+    pixels = list(im.getdata())
+    width, height = im.size
+    pixels = [pixels[i * width:(i + 1) * width] for i in xrange(height)]
+    #print len(pixels)
     objects = {}
+    labels = {}
     nearby = {}
     objectNum = 0
-    for x in range(maxxy[0]):
-        for y in range(maxxy[1]):
-            #print 'pixel =', pixels[x, y]
-            #print x, y, pixels[x, y]
-            if pixels[x, y] == 0:
-                obj = checkIfInsideObject(x, y, nearby)
+    for x in range(height):
+        for y in range(width):
+            if pixels[x][y] == 0:
+                #print 'pixel ', x, y, 'is 0'
+                obj = checkIfInsideObject(x, y, nearby, objects, pixels)
+                #obj = checkIfInsideObject(x, y, objects)
                 if obj == -1:
+                    #print 'pixel is not near known objects, creating new object ', objectNum
                     obj = objectNum
-                    print 'objectNum =', objectNum, x, y
+                    #print 'objectNum =', objectNum, x, y
                     objects[obj] = []
                     objectNum += 1
                 objects[obj].append([x, y])
+                labels[str(x) + ',' + str(y)] = obj
                 nearby[obj] = getNearbyPixels(x, y, pixels)
+    
+    print 'Number of objects = ', objects.keys()
+    #print 'Object labels = ', labels.keys()
+    #for i in sorted(labels.keys()):
+    #    print i, labels[i]
+    #for obj in objects.keys():
+    #    print objects[obj]
 
-    print 'Number of objects = ', objects
+	
     return solution
 
-def checkIfInsideObject(x, y, nearby):
-    obj = -1
+
+def checkIfInsideObject(x, y, nearby, objects, pixels):
+    #obj = -1
+    #print 'in checkIfInsideObject, x, y, nearby =', x, y, nearby
     for obj in nearby:
+        #print 'obj =', obj, nearby[obj]
         if [x, y] in nearby[obj]:
+            #print 'checkIfInsideObject check for nearby returning ', obj
             return obj
-    return obj
+    
+    nearby = getNearbyPixels(x, y, pixels)
+    for obj in objects:
+        #print 'checkIfInsideObject checking for last row of obj', obj, objects[obj]
+        for x1, y1 in objects[obj]:
+            if [x1, y1] in nearby:
+        #if [x, y] in objects[obj][-1]:
+                #print 'checkIfInsideObject checking last row', objects[obj][-1]
+                #print 'checkIfInsideObject check for last row returning ', obj
+                return obj
+    
+    #print 'checkIfInsideObject returning -1'
+    return -1
 
 def getNearbyPixels(x, y, pixels):
     nearby = []
@@ -50,8 +89,351 @@ def getNearbyPixels(x, y, pixels):
                    [x, y-1], [x, y+1],
                    [x+1,y+1], [x+1, y],
                    [x-1, y+1], [x+1, y-1]]:
-        if pixels[x1, y1] == 0:
+        if pixels[x1][y1] == 0:
             nearby.append([x1, y1])
-    #print 'nearby = ', nearby
+    #print 'returning from getNearbyPixels, nearby =', nearby
     return nearby
+
+
+def union2Images(i1, i2):
+    img3 = ImageChops.logical_and(Images1[i1], Images1[i2])
+    return img3
+    
+def checkForEquality(i1, i2):
+    img1 = i1
+    img2 = i2    
+    if isinstance(i1, basestring) and isinstance(i2, basestring):
+        img1 = Images1[i1]
+        img2 = Images1[i2]
+    elif isinstance(i1, basestring) and not isinstance(i2, basestring):
+        if img2.getbands() == ('1',):
+            img1 = Images1[i1]
+        else:
+            img1 = rgbImages[i1]
+    elif isinstance(i2, basestring) and not isinstance(i1, basestring):
+        if img1.getbands() == ('1',):
+            img2 = Images1[i2]
+        else:
+            img2 = rgbImages[i2]
+    
+    if exactlyEqual(img1, img2):
+        #print 'images ', i1, ' and', i2, ' exactly equal.'
+        return True
+    elif almostEqual(img1, img2):
+        # diff = rmsdiff(Images['A'], Images['B'])  # rms diff does not work - returns 0
+                                                    # even for images rotated/reflected
+        #print 'images ', i1, ' and', i2, ' almost equal.'
+        return True
+    return False
+
+# Taken from: http://effbot.org/zone/pil-comparing-images.htm
+def exactlyEqual(img1, img2):
+    diff = ImageChops.difference(img1, img2).getbbox()
+    if diff is None:
+        return True
+    else:
+        return False
+
+def almostEqual(img1, img2):
+    img1Data = img1.getdata()
+    img2Data = img2.getdata()
+    img1BlackCount = 0
+    img2BlackCount = 0
+    same = 0
+    black = None
+    if img1.getbands() == ('1',): # getbands return ('1',) for bilevel images
+        black = 0
+    else:
+        black = (0, 0, 0)
+    #print 'comparing for almost equal', i1, i2
+    img1colors = img1.getcolors()
+    img2colors = img2.getcolors()
+    print 'img1bands, black = ', img1.getbands(), black
+    for pixelCount, rgb in img1colors:
+        #print 'type of pixelCount, rgb = ', type(pixelCount), type(rgb)
+        if rgb == black: #(0, 0, 0):
+            print 'pixelCount, rgb = ', pixelCount, rgb
+            img1BlackCount = pixelCount
+    for pixelCount, rgb in img2colors:
+        if rgb == black: #(0, 0, 0):
+            print 'pixelCount, rgb = ', pixelCount, rgb
+            img2BlackCount = pixelCount
+
+    for pix1, pix2 in zip(img1Data, img2Data):
+        #print 'pix1, pix2 = ', pix1, pix2
+        if pix1 == black: #(0, 0, 0):
+            if pix1 == pix2:
+                same += 1
+    print 'img1BlackCount , img2BlackCount, same = ', img1BlackCount, img2BlackCount, same
+    if abs(img1BlackCount - img2BlackCount) <= SIMILARITY_THRESHOLD and \
+                    img1BlackCount - same <= SIMILARITY_THRESHOLD and \
+                            img2BlackCount - same <= SIMILARITY_THRESHOLD:
+        print 'returning from SIMILARITY_THRESHOLD check'
+        return True
+
+    if float(same)/(float(img1BlackCount) + 0.00001) >= 0.939 and float(same)/(float(img2BlackCount) + 0.00001) >= 0.939:
+        print 'returning from percentage check'
+        return True
+
+    return False
+
+def checkForAdds(i1, i2):
+    img1 = Images1[i1]
+    img2 = Images1[i2]
+    img3 = ImageChops.logical_and(img1, img2)
+
+    return checkForEquality(img2, img3)
+    
+def checkForDeletes(i1, i2):
+    img1 = Images1[i1]
+    img2 = Images1[i2]
+    img3 = ImageChops.logical_or(img1, img2)
+
+    return checkForEquality(img2, img3)
+
+def checkForReflection(i1, i2, reflectionType, problem):
+    img1 = rgbImages[i1]
+    img2 = rgbImages[i2]
+    reflected = None
+
+    if reflectionType == 'h':
+        reflected = img2.transpose(Image.FLIP_LEFT_RIGHT)
+
+    if reflectionType == 'v':
+        reflected = img2.transpose(Image.FLIP_TOP_BOTTOM)
+    return checkForEquality(img1, reflected)
+
+# Taken from http://snipplr.com/view/757/
+# Works
+def rmsdiff(im1, im2):
+    h1 = im1.histogram()
+    h2 = im2.histogram()
+
+    rms = math.sqrt(reduce(operator.add, map(lambda a, b: (a - b) ** 2, h1, h2)) / len(h1))
+
+    return rms
+
+# Taken from: http://effbot.org/zone/pil-comparing-images.htm
+# Does not work
+def rmsdiff2(im1, im2):
+    h = ImageChops.difference(im1, im2).histogram()
+    print 'histogram h = ', h
+
+    # calculate rms
+    #return math.sqrt(sum(h*(i**2) for i, h in enumerate(h))) / (float(im1.size[0]) * im1.size[1]))
+    return math.sqrt(reduce(operator.add,
+        map(lambda h, i: h*(i**2), h, range(len(h)))
+    ) / (float(im1.size[0]) * im1.size[1]))
+
+def identifySolution(predictedSolution):
+    solution = -1
+    solutionImageList = ['1', '2', '3', '4', '5', '6']
+    print 'solutions ', solutionImageList
+    for i in solutionImageList:
+        if checkForEquality(predictedSolution, i):
+            solution = i
+
+    print 'solution = ', solution
+    return solution
+
+def openAllImages(problem):
+    if problem.problemType == '2x2':
+        imageList = ['A', 'B', 'C', '1', '2', '3', '4', '5', '6']
+        solutionImageList = ['1', '2', '3', '4', '5', '6']
+    if problem.problemType == '3x3':
+        imageList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4', '5', '6', '7', '8']
+        solutionImageList = ['1', '2', '3', '4', '5', '6', '7', '8']
+
+    for i in imageList:
+        Images[i] = Image.open(problem.figures[i].visualFilename)
+        rgbImages[i] = Images[i].convert('RGB')
+        Images1[i] = Images[i].convert('1')
+        grayscaleImages[i] = Images[i].convert('L')
+
+
+class Agent:
+    # The default constructor for your Agent. Make sure to execute any
+    # processing necessary before your Agent starts solving problems here.
+    #
+    # Do not add any variables to this signature; they will not be used by
+    # main().
+    def __init__(self):
+        pass
+
+    # The primary method for solving incoming Raven's Progressive Matrices.
+    # For each problem, your Agent's Solve() method will be called. At the
+    # conclusion of Solve(), your Agent should return an integer representing its
+    # answer to the question: "1", "2", "3", "4", "5", or "6". These integers
+    # are also the Names of the individual RavensFigures, obtained through
+    # RavensFigure.getName() (as Strings).
+    #
+    # In addition to returning your answer at the end of the method, your Agent
+    # may also call problem.checkAnswer(int givenAnswer). The parameter
+    # passed to checkAnswer should be your Agent's current guess for the
+    # problem; checkAnswer will return the correct answer to the problem. This
+    # allows your Agent to check its answer. Note, however, that after your
+    # agent has called checkAnswer, it will *not* be able to change its answer.
+    # checkAnswer is used to allow your Agent to learn from its incorrect
+    # answers; however, your Agent cannot change the answer to a question it
+    # has already answered.
+    #
+    # If your Agent calls checkAnswer during execution of Solve, the answer it
+    # returns will be ignored; otherwise, the answer returned at the end of
+    # Solve will be taken as your Agent's answer to this problem.
+    #
+    # Make sure to return your answer *as an integer* at the end of Solve().
+    # Returning your answer as a string may cause your program to crash.
+    def Solve(self,problem):
+
+        solution = -1
+        print 'problem: ', problem.name
+        openAllImages(problem)
+        # print ImageChops.difference(Images['A'], Images['B']).getbbox()
+        if problem.name != 'Basic Problem D-12':
+            return -1
+
+        predictedSolution = ''
+        if problem.problemType == '2x2':
+            print 'checking for equality of A and B'
+            if checkForEquality('A', 'B'):  # Horizontal equality
+                predictedSolution = 'C'
+                solution = identifySolution(predictedSolution)
+                if solution != -1:
+                    return solution
+
+            print 'checking for equality of A and C'
+            if checkForEquality('A', 'C'):  # Vertical equality
+                predictedSolution = 'B'
+                solution = identifySolution(predictedSolution)
+                if solution != -1:
+                    return solution
+
+            print 'checking for horizontal reflection of A and B'
+            if checkForReflection('A', 'B', 'h', problem):  # Horizontal reflection
+                print 'B is a horizontal reflection of A'
+                predictedSolution = rgbImages['C'].transpose(Image.FLIP_LEFT_RIGHT)
+                solution = identifySolution(predictedSolution)
+                if solution != -1:
+                    return solution
+
+            print 'checking for horizontal reflection of A and C'
+            if checkForReflection('A', 'C', 'h', problem):  # Horizontal reflection
+                print 'C is a horizontal reflection of A'
+                predictedSolution = rgbImages['B'].transpose(Image.FLIP_LEFT_RIGHT)
+                solution = identifySolution(predictedSolution)
+                if solution != -1:
+                    return solution
+
+            print 'checking for vertical reflection of A and C'
+            if checkForReflection('A', 'C', 'v', problem):  # Vertical equality
+                print 'C is a vertical reflection of A'
+                predictedSolution = rgbImages['B'].transpose(Image.FLIP_TOP_BOTTOM)
+                #if problem.name == 'Basic Problem B-06':
+                    #predictedSolution.show()
+                solution = identifySolution(predictedSolution)
+                if solution != -1:
+                    return solution
+
+            print 'checking for fills between A and B'
+            if checkForAdds('A', 'B'):
+                print 'B is a filled version of A'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    if checkForAdds('C', i):
+                        solution = int(i)
+                if solution != -1:
+                    return solution
+
+            print 'checking for deletes between A and B'
+            # deletes from A to B is same as adds from B to A
+            if checkForAdds('B', 'A'):
+                print 'A is a filled version of B'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    print 'comparing C and ', i
+                    if checkForAdds(i, 'C'):
+                        print 'C is similar to', i
+                        solution = int(i)
+                    if solution != -1:
+                        return solution                    
+                    
+            print 'checking for fills between A and C'
+            if checkForAdds('A', 'C'):
+                print 'C is a filled version of A'
+                for i in ['1', '2', '3', '4', '5', '6']:
+                    if checkForAdds('B', i):
+                        solution = int(i)
+                if solution != -1:
+                    return solution        
+        # Method to find filled version - does not work
+        #ImageDraw.floodfill(Images['A'], xy, (0, 0, 0), border=None)
+        #mask = Images['A'].convert('L')
+        #th=150 # the value has to be adjusted for an image of interest
+        #mask = mask.point(lambda i: i < th and 255)
+        #mask.show()
+        #print 'mask = ', mask
+        #for x in mask.getdata():
+        #    print x
+
+        # Method to find filled version - works but may not be the right method
+        #Images['B'].filter(ImageFilter.FIND_EDGES).show()
+        #for x in Images['A'].convert('L').getdata():
+        #    print x
+        #print 'A histogram = ', Images1['A'].getdata()
+
+        if problem.problemType == '3x3':
+            '''if checkForEquality('A', 'B') and checkForEquality('B', 'C'):
+                if checkForEquality('D', 'E') and checkForEquality('E', 'F'):
+                    predictedSolution = 'H'
+                    solution = identifySolution(predictedSolution)
+                    if solution != -1:
+                        return solution
+
+            if checkForEquality(union2Images('B', 'D'), Images1['E']) and \
+                checkForEquality(union2Images('C', 'E'), Images1['F']) and \
+                checkForEquality(union2Images('E', 'G'), Images1['H']):
+                print 'type is union'
+                predictedSolution = union2Images('F', 'H')
+                print 'type of predictedSolution = ', type(predictedSolution)
+                for i in ['1', '2', '3', '4', '5', '6', '7', '8']:
+                    solution = identifySolution(predictedSolution)
+                    if solution != -1:
+                        return solution
+        
+        img3 = ImageChops.logical_and(Images1['A'], Images1['B'])
+        img4 = ImageChops.logical_and(img3, Images1['C'])
+        img4.show()
+        
+        img5 = ImageChops.logical_and(Images1['D'], Images1['E'])
+        img6 = ImageChops.logical_and(img5, Images1['F'])
+        img6.show()
+        return solution'''
+        
+        #Images1['A'].show()
+        
+        checkObjectCountType(problem)
+        
+        pixels = list(Images1['A'].getdata())
+        width, height = Images1['A'].size
+        print width, height
+        pixels = [pixels[i * width:(i + 1) * width] for i in xrange(height)]
+        #for x in range(height):
+        #    for y in range(width):
+        #        if pixels[x][y] == 0:
+        
+        im = Images1['C']
+        pixels = list(im.getdata())
+        width, height = im.size
+        pixels = [pixels[i * width:(i + 1) * width] for i in xrange(height)]
+        #print len(pixels)
+        #print pixels[60][56]
+        #for x in range(len(pixels)):
+        #    print pixels[x]        
+    
+        '''for x in range(height):
+            for y in range(width):
+                if pixels[x][y] == 0:
+                    print 'objectNum =', x, y'''
+                    
+
+        
+        return -1
 
