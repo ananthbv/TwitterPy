@@ -22,23 +22,9 @@ Images1 = {}
 SIMILARITY_THRESHOLD = 550
 solutionImageList = []
 
-def checkObjectCountType(problem):
+def checkObjectsCountType(objCounts, pixelCounts):
     solution = -1
-
-    imgObjects = {}
-    objCounts = {}
-    pixelCounts = {}
-    for img in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-                '1', '2', '3', '4', '5', '6', '7', '8']:
-        pixelCounts[img] = 0.0
-        imgObjects[img] = getObjectsPixelData(Images1[img])
-        #print 'Image =', img
-        #print 'Number of objects = ', len(imgObjects[img].keys())
-        objCounts[img] = len(imgObjects[img].keys())
-        for obj in imgObjects[img].keys():
-            pixelCounts[img] += len(imgObjects[img][obj])
-            #print 'len of obj', obj, len(imgObjects[img][obj])
-
+    #return solution
     objCountsABC = [objCounts['A'], objCounts['B'], objCounts['C']]
     pixelsABC = [pixelCounts['A'] * 1.0 / objCounts['A'],
                  pixelCounts['B'] * 1.0 / objCounts['B'],
@@ -47,7 +33,6 @@ def checkObjectCountType(problem):
     pixelsDEF = [pixelCounts['D'] * 1.0 / objCounts['D'],
                  pixelCounts['E'] * 1.0 / objCounts['E'],
                  pixelCounts['F'] * 1.0 / objCounts['F']]
-
 
     pixelsABCSorted = sorted(pixelsABC)
     pixelsDEFSorted = sorted(pixelsDEF)
@@ -62,6 +47,7 @@ def checkObjectCountType(problem):
                 return -1
 
 
+    print 'type is set of similar objects + count'
     #print 'objCountsABC, pixelsABC =', objCountsABC, pixelsDEF
     #print 'objCountsDEF, pixelsDEF =', objCountsDEF, pixelsABC
     for i in ['1', '2', '3', '4', '5', '6', '7', '8']:
@@ -99,7 +85,7 @@ def checkObjectCountType(problem):
 
 # taken from - http://www.labbookpages.co.uk/software/imgProc/blobDetection.html
 def getObjectsPixelData(im):
-
+    #print 'getObjectsPixelData called'
     #im = Images1['B']
     pixels = list(im.getdata())
     width, height = im.size
@@ -125,13 +111,59 @@ def getObjectsPixelData(im):
                 labels[str(x) + ',' + str(y)] = obj
                 nearby[obj] = getNearbyPixels(x, y, pixels)
 
+    
+    #print 'labels before len, values =', len(labels.keys()), labels.values()
+    
+    combines = {}
+    for x in range(height):
+        for y in range(width):
+            if pixels[x][y] != 0:
+                continue
+            nearby = getNearbyPixels(x, y, pixels)
+            curr = str(x) + ',' + str(y)
+            #print 'curr, labels[curr] =', curr, labels[curr]
+            for p in nearby:
+                nearbyPixel = str(p[0]) + ',' + str(p[1])
+                if labels[curr] != labels[nearbyPixel]:
+                    if labels[curr] < labels[nearbyPixel]:
+                        #print 'labels[curr], labels[nearbyPixel] =', labels[curr], labels[nearbyPixel]
+                        combines[labels[curr]] = labels[nearbyPixel]
+                    else:
+                        combines[labels[nearbyPixel]] = labels[curr]
+                    
+    if combines.keys():
+        #print 'combines =', combines
+        for k, v in combines.iteritems():
+            for pix in objects[v]:
+                objects[k].append(pix)
+            objects.pop(v, None)
+	return objects
+	
+	
+	
+	# OLD LOGIC - TAKES A LOOOOOONG TIME
+    #print 'labels after len, values =', len(labels.keys()), labels.values()
+    '''for i in range(1, len(labels.keys())):
+        [xcurr, ycurr] = labels[i]
+        [xprev, yprev] = labels[i - 1]
+        if abs(xcurr - xprev) == 1 or abs(ycurr - yprev) == 1:
+            if labels[i] != labels[i - 1]:
+                print 'xcurr, ycurr, labelcurr, xprev, yprev, labelprev =', xcurr, ycurr, labels[i], xprev, yprev, labels[i - 1]
+    
+    objects = {}
+    for v in labels.values():
+        objects[v] = []
+    #print 'objects =', objects
+    for k, v in labels.iteritems():
+        objects[v].append(k)
+    #print 'objects =', objects    
     #print 'Number of objects = ', objects.keys()
-    for obj in objects.keys():
+    #for obj in objects.keys():
     #    #print 'len of obj', obj, len(objects[obj])
-        print obj
-        print sorted(objects[obj])
-        print ''
-
+    #    print obj
+    #    print sorted(objects[obj])
+    #    print ''
+    return objects
     combines = {}
     objectsCopy = copy.deepcopy(objects)
     for obj, objPixels in objectsCopy.iteritems():
@@ -151,7 +183,7 @@ def getObjectsPixelData(im):
             for pix in objects[v]:
                 objects[k].append(pix)
             objects.pop(v, None)
-
+	'''
 
     return objects
 
@@ -270,6 +302,7 @@ def getLastXY(i):
 
 def fillHalfImage(i1, half):
     ax1, ay1, ax2, ay2 = Images1[i1].getbbox()
+    print 'ax1, ay1, ax2, ay2 =', ax1, ay1, ax2, ay2
     i1Copy= Images[i1].convert('1')
     if half == 'top':
         coords = (ax1, ay1+(ay2-ay1)/2 + 1, ax2, ay2)
@@ -277,8 +310,10 @@ def fillHalfImage(i1, half):
         coords = (ax1, ay1, ax2, ay2/2)
     # left half = firsthalf = (ax1+8, ay1, ax2/2, ay2)
     # right half = secondhalf = (ax1+(ax2-ax1)/2 + 1, ay1, ax2-7, ay2)
+    print 'coords = ', coords
 
-    i1Copy.paste((255,255,255), coords)
+    #i1Copy.paste((255,255,255), coords)
+    i1Copy.paste(255, coords)
 
     return i1Copy
 
@@ -658,7 +693,7 @@ class Agent:
         solution = -1
         openAllImages(problem)
         # print ImageChops.difference(Images['A'], Images['B']).getbbox()
-        #if problem.name != 'Basic Problem D-12':
+        #if problem.name != 'Basic Problem E-09': # or problem.name == 'Basic Problem D-08' or problem.name == 'Basic Problem E-07' or problem.name == 'Basic Problem E-09':
         #    return -1
         print 'problem: ', problem.name
         predictedSolution = ''
@@ -980,12 +1015,22 @@ class Agent:
             #if checkForEquality(xor2Images(Images1['B'], Images1['E']), Images1['H']):
             #    print 'type'
 
+            imgObjects = {}
+            objCounts = {}
+            pixelCounts = {}
+            for img in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4', '5', '6', '7', '8']:
+                pixelCounts[img] = 0.0
+                imgObjects[img] = getObjectsPixelData(Images1[img])
+                #print 'Image =', img
+                #print 'Number of objects = ', len(imgObjects[img].keys())
+                objCounts[img] = len(imgObjects[img].keys())
+                for obj in imgObjects[img].keys():
+                    pixelCounts[img] += len(imgObjects[img][obj])
+                    #print 'len of obj', obj, len(imgObjects[img][obj])
 
-            solution = checkObjectCountType(problem)
-
+            solution = checkObjectsCountType(objCounts, pixelCounts)
             if solution != -1:
                 return solution
 
         return solution
-
 
