@@ -1,0 +1,31 @@
+https://www.quora.com/How-does-Siri-work-in-terms-of-algorithms
+
+https://www.google.com/search?q=automatic+faq+answering+application&oq=automatic+faq+answering+application&aqs=chrome..69i57.12607j0j7&sourceid=chrome&es_sm=122&ie=UTF-8
+
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.12.7325&rep=rep1&type=pdf
+
+http://people.dsv.su.se/~eriks/faq-answering-self-service.pdf
+
+https://www.google.com/search?q=FAQfinder&oq=FAQfinder&aqs=chrome..69i57.2048j0j7&sourceid=chrome&es_sm=122&ie=UTF-8
+
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.37.4384&rep=rep1&type=pdf
+
+https://en.wikipedia.org/wiki/Intelligent_agent
+
+https://en.wikipedia.org/wiki/Multi-agent_system
+
+
+
+1. Have a training set of tests
+2. Extract features from the training set RPMs
+3. Run each of the agents for each problem in the training set
+4. Collect results
+5. Create a table of features of each RPM and which agent solved it best.
+
+The table in step 5 will be the result of training of the meta-agent with the training set
+
+Once the new problems are received:
+1. Extract the features of each problem
+2. Compare with the feature set in the table and select the feature which matches closest with the new problem feature
+3. Get the agent which performed the best for that feature set
+4. Run that agent.
