@@ -15,7 +15,6 @@ https://en.wikipedia.org/wiki/Intelligent_agent
 https://en.wikipedia.org/wiki/Multi-agent_system
 
 
-
 1. Have a training set of tests
 2. Extract features from the training set RPMs
 3. Run each of the agents for each problem in the training set
@@ -29,3 +28,19 @@ Once the new problems are received:
 2. Compare with the feature set in the table and select the feature which matches closest with the new problem feature
 3. Get the agent which performed the best for that feature set
 4. Run that agent.
+
+Examples of what kind of features to extract:
+1. Images in A to H
+2. Objects in each image
+3. Pixel counts of objects in each image
+4. Set of objects in each row/column. Ex: first row contains square, circle and diamond
+5. Fill types of objects in each row/column. Ex: first row contains a filled object, unfilled object and one filled + unfilled object
+
+
+Conditions on which agents are selected:
+*. If set of objects + fill is same in each row
+*. If set of objects is same in each row
+
+
+
+Learning by Correcting Mistakes can be applied to learn about new types of RPMs
