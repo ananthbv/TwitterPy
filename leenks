@@ -15,7 +15,17 @@ https://en.wikipedia.org/wiki/Intelligent_agent
 https://en.wikipedia.org/wiki/Multi-agent_system
 
 
-1. Have a training set of tests
+Q1
+----------------------------
+1. Break question into 1-, 2- and 3-grams
+2. Search each n-gram in question. Assign points to each match
+3. Search each n-gram on answer. Assign points to each match
+4. Return the question with the highest match
+
+
+Q2
+----------------------------
+1. Have a training set of RPMs
 2. Extract features from the training set RPMs
 3. Run each of the agents for each problem in the training set
 4. Collect results
@@ -36,11 +46,9 @@ Examples of what kind of features to extract:
 4. Set of objects in each row/column. Ex: first row contains square, circle and diamond
 5. Fill types of objects in each row/column. Ex: first row contains a filled object, unfilled object and one filled + unfilled object
 
-
 Conditions on which agents are selected:
 *. If set of objects + fill is same in each row
 *. If set of objects is same in each row
-
-
+*. If objects are same in each row
 
 Learning by Correcting Mistakes can be applied to learn about new types of RPMs
