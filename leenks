@@ -25,7 +25,12 @@ Q1
 
 Q2
 ----------------------------
-1. Have a training set of RPMs
+
+1. The meta-agent is given the results of all student-agents performance on problem sets Basic, Test (and Challenge and Ravens, if available) B, C, D and E.
+2. The meta-agent is then run against the actual Raven's test
+
+
+1. Basic, Test (and Challenge and Ravens, if available) B, C, D and E will be treated as the training set
 2. Extract features from the training set RPMs
 3. Run each of the agents for each problem in the training set
 4. Collect results
@@ -42,6 +47,7 @@ Once the new problems are received:
 Examples of what kind of features to extract:
 1. Images in A to H
 2. Objects in each image
+3. Count of each type of object in each image
 3. Pixel counts of objects in each image
 4. Set of objects in each row/column. Ex: first row contains square, circle and diamond
 5. Fill types of objects in each row/column. Ex: first row contains a filled object, unfilled object and one filled + unfilled object
