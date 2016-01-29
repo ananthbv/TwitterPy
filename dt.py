@@ -9,13 +9,12 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import AdaBoostClassifier
 import copy
 
-label_column = 0
+label_column = -1
 
 def print_list(lst, cmt):
     print cmt, '='
     for row in lst:
         print row
-
        
 def split_into_train_test_random(winedf):
     df = copy.deepcopy(winedf)
@@ -23,28 +22,28 @@ def split_into_train_test_random(winedf):
     train_set = df
     test_set = []
     to_be_removed = []
+    #if (label_column == -1):
+    label_column = len(df.columns) - 1
+    print 'label_column =', label_column
+    test_set_len = int(0.3 * len(df))
+    print 'full set len, test_set_len =', len(df), test_set_len
     
-    while len(test_set) <= 25:
+    while len(test_set) <= test_set_len:
         y = random.choice(list(s))
         s.remove(y)
         to_be_removed.append(y)
         test_set.append(list(df.iloc[y]))
     df.drop(df.index[to_be_removed], inplace=True)
+
     test_df = pd.DataFrame(test_set)
-    labels_train = list(df[0])
-    df.drop([0], 1, inplace=True)
-    labels_test = list(test_df[0])
-    test_df.drop([0], 1, inplace=True)
+    labels_train = list(df[label_column])
+    df.drop([label_column], 1, inplace=True)
+    labels_test = list(test_df[label_column])
+    test_df.drop([label_column], 1, inplace=True)
     features_train = df.values.tolist()
     features_test = test_df.values.tolist()
 
-    #print 'len(features_train), len(labels_train), len(features_test), len(labels_test) = ', len(features_train), len(labels_train), len(features_test), len(labels_test)
-    #print_list(features_train, "features_train")
-    #print_list(labels_train, "features_train")
-    #print_list(features_test, "features_train")
-    #print_list(labels_test, "features_train")
     return features_train, labels_train, features_test, labels_test
-
 
 def split_into_train_test_kfold(df):
     trains_tests_list = []
@@ -53,7 +52,6 @@ def split_into_train_test_kfold(df):
         #print('TRAIN: ', len(train_index), 'TEST: ', len(test_index))
         trains_tests_list.append([train_index, test_index])
     return trains_tests_list
-    
     
 def get_train_test_data(winedf, train_test_indexes):
     train_set = []
@@ -79,13 +77,15 @@ def get_train_test_data(winedf, train_test_indexes):
     
     return features_train, labels_train, features_test, labels_test
     
-winedf = pd.read_csv('wine_data.csv', header=None)
-#print winedf
+#winedf = pd.read_csv('wine_data.csv', header=None)
+
+winedf = pd.read_csv('winequality-white.csv', header=None, delimiter=';')
+#print winedf.iloc[0]
+#print winedf['quality']
 
 #features_train, labels_train, features_test, labels_test = split_into_train_test2(winedf)
 
 #print_list(trains_tests_list, 'trains_tests_list')
-
 
 for i in range(7):
     features_train, labels_train, features_test, labels_test = split_into_train_test_random(winedf)
@@ -136,21 +136,3 @@ for train_test_indexes in trains_tests_list:
     print acc
 '''
 
-'''clf = tree.DecisionTreeClassifier(max_depth = 25)
-clf = KNeighborsClassifier(n_neighbors=51)
-#clf = SVC(kernel="linear", C=0.025)
-clf = SVC(gamma=2, C=0.025)
-clf = SVC()
-clf = AdaBoostClassifier()
-clf = SVC(kernel="linear", C=0.025)
-clf.fit(features_train, labels_train)
-pred = clf.predict(features_test)
-
-
-acc = accuracy_score(pred, labels_test)
-print acc'''
-
-#acc_min_samples_split_50 = accuracy_score(pred50, labels_test)
-#acc = accuracy_score(pred, labels_test)
-
-#print acc
