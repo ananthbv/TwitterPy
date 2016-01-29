@@ -15,7 +15,7 @@ def print_list(lst, cmt):
     print cmt, '='
     for row in lst:
         print row
-       
+
 def split_into_train_test_random(winedf):
     df = copy.deepcopy(winedf)
     s=set(range(len(df)))
@@ -79,7 +79,7 @@ def get_train_test_data(winedf, train_test_indexes):
     
 #winedf = pd.read_csv('wine_data.csv', header=None)
 
-winedf = pd.read_csv('winequality-white.csv', header=None, delimiter=';')
+winedf = pd.read_csv('winequality-white.csv', header=None) #, delimiter=';')
 #print winedf.iloc[0]
 #print winedf['quality']
 
@@ -87,39 +87,74 @@ winedf = pd.read_csv('winequality-white.csv', header=None, delimiter=';')
 
 #print_list(trains_tests_list, 'trains_tests_list')
 
-for i in range(7):
+all_iterations_scores = []
+models = ['DTdepth5','DTdepth10','DTdepth15','DTdepth20','DTdepth25','DTdepth30','DTdepth40','DTdepth50',
+             'knn2weightsuniform','knn2weightsdistance','knn3weightsuniform','knn3weightsdistance','knn5weightsuniform',
+             'knn5weightsdistance','knn7weightsuniform','knn7weightsdistance','knn10weightsuniform','knn10weightsdistance',
+             'adaboosttreedepth5est10','adaboosttreedepth5est30','adaboosttreedepth5est50','adaboosttreedepth5est100','adaboosttreedepth10est10',
+             'adaboosttreedepth10est30','adaboosttreedepth10est50','adaboosttreedepth10est100','adaboosttreedepth15est10','adaboosttreedepth15est30',
+             'adaboosttreedepth15est50','adaboosttreedepth15est100','adaboosttreedepth20est10','adaboosttreedepth20est30','adaboosttreedepth20est50',
+             'adaboosttreedepth20est100','adaboosttreedepth25est10','adaboosttreedepth25est30','adaboosttreedepth25est50','adaboosttreedepth25est100',
+             'adaboosttreedepth30est10','adaboosttreedepth30est30','adaboosttreedepth30est50','adaboosttreedepth30est100','adaboosttreedepth40est10',
+             'adaboosttreedepth40est30','adaboosttreedepth40est50','adaboosttreedepth40est100','adaboosttreedepth50est10','adaboosttreedepth50est30',
+             'adaboosttreedepth50est50','adaboosttreedepth50est100'
+          ]
+
+for i in range(10):
     features_train, labels_train, features_test, labels_test = split_into_train_test_random(winedf)
-    #clf = AdaBoostClassifier()
-    clf = tree.DecisionTreeClassifier(max_depth = 25)
-    clf.fit(features_train, labels_train)
-    pred = clf.predict(features_test)
-    acc = accuracy_score(pred, labels_test)
-    print 'iteration', i, 'decision tree max depth 25 accuracy =', acc
+    iteration_scores = []    
+    for depth in [5, 10, 15, 20, 25, 30, 40, 50]:
+        clf = tree.DecisionTreeClassifier(max_depth = depth)
+        clf.fit(features_train, labels_train)
+        pred = clf.predict(features_test)
+        acc = accuracy_score(pred, labels_test)
+        print 'iteration', i, 'decision tree max depth =', depth, 'accuracy =', acc
+        iteration_scores.append(acc)
+   
+    for neighbors in [2, 3, 5, 7, 10]:
+        for wts in ['uniform', 'distance']: 
+            clf = KNeighborsClassifier(n_neighbors=neighbors, weights=wts)
+            clf.fit(features_train, labels_train)
+            pred = clf.predict(features_test)
+            acc = accuracy_score(pred, labels_test)
+            print 'iteration', i, 'kneighbors k =', neighbors, 'weights = ', wts, 'accuracy =', acc
+            iteration_scores.append(acc)
 
-    clf = KNeighborsClassifier(n_neighbors=5)
-    clf.fit(features_train, labels_train)
-    pred = clf.predict(features_test)
-    acc = accuracy_score(pred, labels_test)
-    print 'iteration', i, 'kneighbors k = 5 accuracy =', acc
+    '''for SVCKernel in ['linear', 'sigmoid', 'poly']:
+        for Cvalue in [0.001, 0.01, 0.025, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 100.0, 1000.0]:
+            clf = SVC(kernel=SVCKernel, C=Cvalue)
+            clf.fit(features_train, labels_train)
+            pred = clf.predict(features_test)
+            acc = accuracy_score(pred, labels_test)
+            print 'iteration', i, 'SVM kernel =', SVCKernel, 'C =', Cvalue, 'accuracy =', acc
+            
+    for gamma in [0.001, 0.01, 0.025, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 100.0]:
+        for Cvalue in [0.001, 0.01, 0.025, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 100.0, 1000.0]:
+                clf = SVC(kernel=SVCKernel, C=Cvalue)
+                clf.fit(features_train, labels_train)
+                pred = clf.predict(features_test)
+                acc = accuracy_score(pred, labels_test)
+                print 'iteration', i, 'SVM kernel = rbf, gamma =', gamma, 'C =', Cvalue, 'accuracy =', acc'''
 
-    clf = SVC(kernel="linear", C=0.025)
-    clf.fit(features_train, labels_train)
-    pred = clf.predict(features_test)
-    acc = accuracy_score(pred, labels_test)
-    print 'iteration', i, 'SVM linear accuracy =', acc
 
-    clf = SVC(gamma=2, C=0.025)
-    clf.fit(features_train, labels_train)
-    pred = clf.predict(features_test)
-    acc = accuracy_score(pred, labels_test)
-    print 'iteration', i, 'SVM rbf accuracy =', acc
+    for depth in [5, 10, 15, 20, 25, 30, 40, 50]:
+        for estimators in [10, 30, 50, 100]:
+            clf = AdaBoostClassifier(tree.DecisionTreeClassifier(max_depth=depth), n_estimators=estimators)
+            clf.fit(features_train, labels_train)
+            pred = clf.predict(features_test)
+            acc = accuracy_score(pred, labels_test)
+            print 'iteration', i, 'adaboost tree depth =', depth, 'estimators =', estimators, 'accuracy =', acc
+            iteration_scores.append(acc)
+    #print len(iteration_scores)           
+    all_iterations_scores.append(iteration_scores)
+    #break
+    
+#print_list(all_iterations_scores, 'all scores')
+scoresdf = pd.DataFrame(all_iterations_scores)
 
-    clf = AdaBoostClassifier()
-    clf.fit(features_train, labels_train)
-    pred = clf.predict(features_test)
-    acc = accuracy_score(pred, labels_test)
-    print 'iteration', i, 'adaboost accuracy =', acc
-
+for i in range(len(scoresdf.columns)):
+    l = scoresdf[i].values.tolist()
+    print 'Model {}, Avg. accuracy = {}'.format(models[i], sum(l) / float(len(l)))
 '''trains_tests_list = split_into_train_test_kfold(winedf)
 for train_test_indexes in trains_tests_list:
     features_train, labels_train, features_test, labels_test = get_train_test_data(winedf.values.tolist(), train_test_indexes)
@@ -135,4 +170,3 @@ for train_test_indexes in trains_tests_list:
     acc = accuracy_score(pred, labels_test)
     print acc
 '''
-
