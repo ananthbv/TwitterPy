@@ -9,6 +9,8 @@ from sklearn.cross_validation import KFold
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import AdaBoostClassifier
 from sknn.mlp import Classifier, Layer
+from matplotlib import pyplot as plt
+
 
 import copy
 
@@ -111,40 +113,100 @@ models = ['DTdepth5gini','DTdepth10gini','DTdepth15gini','DTdepth20gini','DTdept
              'adaboosttreedepth50est50entropy','adaboosttreedepth50est100entropy'
           ]
 
+
 for i in range(10):
     features_train, labels_train, features_test, labels_test = split_into_train_test_random(winedf)
-    iteration_scores = []    
+    iteration_scores = []
+    dt_train_scores = []
+    dt_test_scores = []
+    plt.figure() 
+    plt.title('Decision tree using GINI criteria')
+    plt.xlabel("Depth")
+    plt.ylabel("Score")
     for depth in [5, 10, 15, 20, 25, 30, 40, 50]:
         clf = tree.DecisionTreeClassifier(max_depth = depth)
         clf.fit(features_train, labels_train)
-        print 'train score =', clf.score(features_train, labels_train)
-        print 'test score =', clf.score(features_test, labels_test)
+        dt_train_scores.append(clf.score(features_train, labels_train))
+        dt_test_scores.append(clf.score(features_test, labels_test))
         pred = clf.predict(features_test)
         acc = accuracy_score(pred, labels_test)
         print 'iteration', i, 'decision gini tree max depth =', depth, 'accuracy =', acc
         iteration_scores.append(acc)
+    plt.plot([5, 10, 15, 20, 25, 30, 40, 50], dt_train_scores, 'o-', color="b", label="Training scores")
+    plt.plot([5, 10, 15, 20, 25, 30, 40, 50], dt_test_scores, 'o-', color="g", label="Testing scores")
+    plt.legend(loc="best")
+    #plt.show()
 
+    plt.figure() 
+    plt.title('Decision tree using entropy criteria')
+    plt.xlabel("Depth")
+    plt.ylabel("Score")
+    dt_train_scores = []
+    dt_test_scores = []
     for depth in [5, 10, 15, 20, 25, 30, 40, 50]:
         clf = tree.DecisionTreeClassifier(max_depth = depth, criterion='entropy')
         clf.fit(features_train, labels_train)
-        print 'train score =', clf.score(features_train, labels_train)
-        print 'test score =', clf.score(features_test, labels_test)
+        #print 'train score =', clf.score(features_train, labels_train)
+        #print 'test score =', clf.score(features_test, labels_test)
+        dt_train_scores.append(clf.score(features_train, labels_train))
+        dt_test_scores.append(clf.score(features_test, labels_test))
         pred = clf.predict(features_test)
         acc = accuracy_score(pred, labels_test)
         print 'iteration', i, 'decision entropy tree max depth =', depth, 'accuracy =', acc
         iteration_scores.append(acc)
-        
-    for neighbors in [2, 3, 5, 7, 10]:
-        for wts in ['uniform', 'distance']: 
+    plt.plot([5, 10, 15, 20, 25, 30, 40, 50], dt_train_scores, 'o-', color="b", label="Training scores")
+    plt.plot([5, 10, 15, 20, 25, 30, 40, 50], dt_test_scores, 'o-', color="g", label="Testing scores")
+    plt.legend(loc="best")
+    #plt.show()
+
+    plt.figure() 
+    plt.title('kNN with uniform')
+    plt.xlabel("Number of Neighbors")
+    plt.ylabel("Score")
+    dt_train_scores = []
+    dt_test_scores = []
+    for neighbors in [2, 3, 5, 7, 10, 20, 30, 40, 50]:
+        for wts in ['uniform']: #, 'distance']: 
             clf = KNeighborsClassifier(n_neighbors=neighbors, weights=wts)
             clf.fit(features_train, labels_train)
-            print 'train score =', clf.score(features_train, labels_train)
-            print 'test score =', clf.score(features_test, labels_test)
+            #print 'train score =', clf.score(features_train, labels_train)
+            #print 'test score =', clf.score(features_test, labels_test)
+            dt_train_scores.append(clf.score(features_train, labels_train))
+            dt_test_scores.append(clf.score(features_test, labels_test))
             pred = clf.predict(features_test)
             acc = accuracy_score(pred, labels_test)
             print 'iteration', i, 'kneighbors k =', neighbors, 'weights = ', wts, 'accuracy =', acc
             iteration_scores.append(acc)
+    plt.plot([2, 3, 5, 7, 10, 20, 30, 40, 50], dt_train_scores, 'o-', color="b", label="Training scores")
+    plt.plot([2, 3, 5, 7, 10, 20, 30, 40, 50], dt_test_scores, 'o-', color="g", label="Testing scores")
+    plt.legend(loc="best")
+    #plt.show()
 
+    plt.figure() 
+    plt.title('kNN with weights')
+    plt.xlabel("Number of Neighbors")
+    plt.ylabel("Score")
+    dt_train_scores = []
+    dt_test_scores = []
+    for neighbors in [2, 3, 5, 7, 10, 20, 30, 40, 50]:
+        for wts in ['distance']: 
+            clf = KNeighborsClassifier(n_neighbors=neighbors, weights=wts)
+            clf.fit(features_train, labels_train)
+            #print 'train score =', clf.score(features_train, labels_train)
+            #print 'test score =', clf.score(features_test, labels_test)
+            dt_train_scores.append(clf.score(features_train, labels_train))
+            dt_test_scores.append(clf.score(features_test, labels_test))
+            pred = clf.predict(features_test)
+            acc = accuracy_score(pred, labels_test)
+            print 'iteration', i, 'kneighbors k =', neighbors, 'weights = ', wts, 'accuracy =', acc
+            iteration_scores.append(acc)
+    plt.plot([2, 3, 5, 7, 10, 20, 30, 40, 50], dt_train_scores, 'o-', color="b", label="Training scores")
+    plt.plot([2, 3, 5, 7, 10, 20, 30, 40, 50], dt_test_scores, 'o-', color="g", label="Testing scores")
+    plt.legend(loc="best")
+    #plt.show()
+    
+    
+    
     '''for SVCKernel in ['linear', 'sigmoid', 'poly']:
         for Cvalue in [0.001, 0.01, 0.025, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 100.0, 1000.0]:
             clf = SVC(kernel=SVCKernel, C=Cvalue)
@@ -193,7 +255,8 @@ for i in range(10):
                                         Layer("Softmax")
                                        ],
                                     learning_rate=alpha,
-                                    n_iter=iterations)
+                                    n_iter=iterations,
+                                    n_stable=10)
                                     #dropout_rate=None)
                 clf.fit(np.array(features_train), np.array(labels_train))
                 print 'train score =', clf.score(features_train, labels_train)
@@ -241,15 +304,19 @@ for i in range(len(scoresdf.columns)):
 print "PENDING TASKS\nimplement learning curves\nimplement cross val score\n"
 print "try with normalization\ndifferent epochs with neural nets\ngraphviz for DTs"
 
-print "implement learning curves \
-        implement proper model selection \
-        implement cross val score \
-        try with normalization \
-        different epochs with neural nets \
-        graphviz for DTs \
-        give a try with pybrain \
-        implement with 2nd data set \
-        Assignment paper"
+print "implement with 2nd data set \
+       implement learning curves \
+       implement proper model selection \
+       implement cross val score \
+       try with normalization \
+       different epochs with neural nets \
+       graphviz for DTs \
+       confusion matrix \
+        \
+       give a try with pybrain \
+       learning curves with varying training sizes \
+       bias variance curves \
+       Assignment paper\n"
 
 '''trains_tests_list = split_into_train_test_kfold(winedf)
 for train_test_indexes in trains_tests_list:
