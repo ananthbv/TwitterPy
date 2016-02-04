@@ -12,11 +12,20 @@ from sknn.mlp import Classifier, Layer
 from matplotlib import pyplot as plt
 import sys
 import copy
+from sklearn import cross_validation
+from sklearn.learning_curve import learning_curve
 
 def print_list(lst, cmt):
     print cmt, '='
     for row in lst:
         print row
+
+def get_list_from_df(df, label_column):
+    y = list(df[label_column])
+    df.drop([label_column], 1, inplace=True)
+    X = df.values.tolist()
+    return X, y
+
 
 def split_into_train_test(fulldf):
     df = copy.deepcopy(fulldf)
@@ -188,15 +197,21 @@ pred = best_clf.predict(X_test)
 acc = accuracy_score(pred, y_test)
 print 'Best classifier =', best_clf_desc
 print 'Accuracy of best classifier on test set =', acc
-#if (dt):
-#    tree.export_graphviz(best_clf, out_file='tree.dot')
 
-#print "PENDING TASKS\nimplement learning curves\nimplement cross val score\n"
-#print "try with normalization\ndifferent epochs with neural nets\ngraphviz for DTs"
+
+# Learning curve of best classifier with increasing training sizes 
+X, y = get_list_from_df(winedf, label_column)
+cv = cross_validation.ShuffleSplit(len(X), n_iter=5,test_size=0.2, random_state=0)
+
+train_sizes, train_scores, valid_scores = learning_curve(best_clf, X, y, train_sizes=[ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1. ], cv=cv)
+print 'train_sizes =', train_sizes
+print 'train_scores =', train_scores
+print 'valid_scores =', valid_scores
+
 
 print "done - implement with 2nd data set \n \
 implement learning curves \n \
-learning curves with varying training sizes \n \
+done - learning curves with varying training sizes \n \
 done - implement proper model selection \n \
 done - implement cross val score \n \
 try with normalization \n \
