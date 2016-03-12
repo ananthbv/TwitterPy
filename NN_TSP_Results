@@ -1,0 +1,612 @@
+
+inputLayer = 7, hiddenLayer = 5, outputLayer = 29, trainingIterations = 1000;
+-----------------------------------------------------------------------------
+
+Results for RHC: 
+Correctly classified 785.0 instances.
+Incorrectly classified 3392.0 instances.
+Percent correctly classified: 18.793%
+Training time: 15.121 seconds
+Testing time: 0.010 seconds
+
+Results for SA: 
+Correctly classified 468.0 instances.
+Incorrectly classified 3709.0 instances.
+Percent correctly classified: 11.204%
+Training time: 14.687 seconds
+Testing time: 0.008 seconds
+
+Results for GA: 
+Correctly classified 372.0 instances.
+Incorrectly classified 3805.0 instances.
+Percent correctly classified: 8.906%
+Training time: 744.696 seconds
+Testing time: 0.008 seconds
+
+
+
+
+inputLayer = 7, hiddenLayer = 7, outputLayer = 29, trainingIterations = 1000;
+-----------------------------------------------------------------------------
+
+Results for RHC: 
+Correctly classified 747.0 instances.
+Incorrectly classified 3430.0 instances.
+Percent correctly classified: 17.884%
+Training time: 17.380 seconds
+Testing time: 0.011 seconds
+
+Results for SA: 
+Correctly classified 603.0 instances.
+Incorrectly classified 3574.0 instances.
+Percent correctly classified: 14.436%
+Training time: 17.471 seconds
+Testing time: 0.010 seconds
+
+Results for GA: 
+Correctly classified 568.0 instances.
+Incorrectly classified 3609.0 instances.
+Percent correctly classified: 13.598%
+Training time: 887.107 seconds
+Testing time: 0.010 seconds
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 10, outputLayer = 29, trainingIterations = 1000;
+------------------------------------------------------------------------------
+
+Results for RHC: 
+Correctly classified 775.0 instances.
+Incorrectly classified 3402.0 instances.
+Percent correctly classified: 18.554%
+Training time: 18.518 seconds
+Testing time: 0.013 seconds
+
+Results for SA: 
+Correctly classified 645.0 instances.
+Incorrectly classified 3532.0 instances.
+Percent correctly classified: 15.442%
+Training time: 19.232 seconds
+Testing time: 0.010 seconds
+
+Results for GA: 
+Correctly classified 391.0 instances.
+Incorrectly classified 3786.0 instances.
+Percent correctly classified: 9.361%
+Training time: 968.370 seconds
+Testing time: 0.010 seconds
+
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 15, outputLayer = 29, trainingIterations = 1000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 824.0 instances.
+Incorrectly classified 3353.0 instances.
+Percent correctly classified: 19.727%
+Training time: 22.880 seconds
+Testing time: 0.015 seconds
+
+Results for SA: 
+Correctly classified 689.0 instances.
+Incorrectly classified 3488.0 instances.
+Percent correctly classified: 16.495%
+Training time: 23.361 seconds
+Testing time: 0.013 seconds
+
+Results for GA: 
+Correctly classified 690.0 instances.
+Incorrectly classified 3487.0 instances.
+Percent correctly classified: 16.519%
+Training time: 1190.979 seconds
+Testing time: 0.013 seconds
+
+
+
+
+inputLayer = 7, hiddenLayer = 20, outputLayer = 29, trainingIterations = 1000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 647.0 instances.
+Incorrectly classified 3530.0 instances.
+Percent correctly classified: 15.490%
+Training time: 27.421 seconds
+Testing time: 0.016 seconds
+
+Results for SA: 
+Correctly classified 128.0 instances.
+Incorrectly classified 4049.0 instances.
+Percent correctly classified: 3.064%
+Training time: 27.201 seconds
+Testing time: 0.014 seconds
+
+Results for GA: 
+Correctly classified 522.0 instances.
+Incorrectly classified 3655.0 instances.
+Percent correctly classified: 12.497%
+Training time: 1400.490 seconds
+Testing time: 0.014 seconds
+
+
+
+
+inputLayer = 7, hiddenLayer = 25, outputLayer = 29, trainingIterations = 1000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 749.0 instances.
+Incorrectly classified 3428.0 instances.
+Percent correctly classified: 17.932%
+Training time: 31.051 seconds
+Testing time: 0.018 seconds
+
+Results for SA: 
+Correctly classified 527.0 instances.
+Incorrectly classified 3650.0 instances.
+Percent correctly classified: 12.617%
+Training time: 30.353 seconds
+Testing time: 0.016 seconds
+
+Results for GA: 
+Correctly classified 638.0 instances.
+Incorrectly classified 3539.0 instances.
+Percent correctly classified: 15.274%
+Training time: 1706.464 seconds
+Testing time: 0.016 seconds
+
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 5, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 971.0 instances.
+Incorrectly classified 3206.0 instances.
+Percent correctly classified: 23.246%
+Training time: 29.856 seconds
+Testing time: 0.010 seconds
+
+Results for SA: 
+Correctly classified 955.0 instances.
+Incorrectly classified 3222.0 instances.
+Percent correctly classified: 22.863%
+Training time: 30.141 seconds
+Testing time: 0.008 seconds
+
+Results for GA: 
+Correctly classified 544.0 instances.
+Incorrectly classified 3633.0 instances.
+Percent correctly classified: 13.024%
+Training time: 1520.694 seconds
+Testing time: 0.009 seconds
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 7, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1050.0 instances.
+Incorrectly classified 3127.0 instances.
+Percent correctly classified: 25.138%
+Training time: 35.615 seconds
+Testing time: 0.011 seconds
+
+Results for SA: 
+Correctly classified 832.0 instances.
+Incorrectly classified 3345.0 instances.
+Percent correctly classified: 19.919%
+Training time: 35.246 seconds
+Testing time: 0.010 seconds
+
+Results for GA: 
+Correctly classified 676.0 instances.
+Incorrectly classified 3501.0 instances.
+Percent correctly classified: 16.184%
+Training time: 1755.641 seconds
+Testing time: 0.010 seconds
+
+
+
+
+
+
+
+
+int inputLayer = 7, hiddenLayer = 10, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 957.0 instances.
+Incorrectly classified 3220.0 instances.
+Percent correctly classified: 22.911%
+Training time: 37.667 seconds
+Testing time: 0.013 seconds
+
+Results for SA: 
+Correctly classified 708.0 instances.
+Incorrectly classified 3469.0 instances.
+Percent correctly classified: 16.950%
+Training time: 37.801 seconds
+Testing time: 0.010 seconds
+
+Results for GA: 
+Correctly classified 690.0 instances.
+Incorrectly classified 3487.0 instances.
+Percent correctly classified: 16.519%
+Training time: 1904.232 seconds
+Testing time: 0.010 seconds
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 15, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 936.0 instances.
+Incorrectly classified 3241.0 instances.
+Percent correctly classified: 22.408%
+Training time: 45.903 seconds
+Testing time: 0.014 seconds
+
+Results for SA: 
+Correctly classified 710.0 instances.
+Incorrectly classified 3467.0 instances.
+Percent correctly classified: 16.998%
+Training time: 46.781 seconds
+Testing time: 0.012 seconds
+
+Results for GA: 
+Correctly classified 723.0 instances.
+Incorrectly classified 3454.0 instances.
+Percent correctly classified: 17.309%
+Training time: 2473.161 seconds
+Testing time: 0.012 seconds
+
+
+
+
+
+
+
+int inputLayer = 7, hiddenLayer = 20, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 891.0 instances.
+Incorrectly classified 3286.0 instances.
+Percent correctly classified: 21.331%
+Training time: 55.934 seconds
+Testing time: 0.016 seconds
+
+Results for SA: 
+Correctly classified 929.0 instances.
+Incorrectly classified 3248.0 instances.
+Percent correctly classified: 22.241%
+Training time: 55.914 seconds
+Testing time: 0.015 seconds
+
+Results for GA: 
+Correctly classified 797.0 instances.
+Incorrectly classified 3380.0 instances.
+Percent correctly classified: 19.081%
+Training time: 2882.906 seconds
+Testing time: 0.015 seconds
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 25, outputLayer = 29, trainingIterations = 2000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 954.0 instances.
+Incorrectly classified 3223.0 instances.
+Percent correctly classified: 22.839%
+Training time: 64.305 seconds
+Testing time: 0.019 seconds
+
+Results for SA: 
+Correctly classified 851.0 instances.
+Incorrectly classified 3326.0 instances.
+Percent correctly classified: 20.373%
+Training time: 63.985 seconds
+Testing time: 0.018 seconds
+
+Results for GA: 
+Correctly classified 553.0 instances.
+Incorrectly classified 3624.0 instances.
+Percent correctly classified: 13.239%
+Training time: 3389.859 seconds
+Testing time: 0.017 seconds
+
+
+
+
+
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 5, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1090.0 instances.
+Incorrectly classified 3087.0 instances.
+Percent correctly classified: 26.095%
+Training time: 45.575 seconds
+Testing time: 0.010 seconds
+
+Results for SA: 
+Correctly classified 906.0 instances.
+Incorrectly classified 3271.0 instances.
+Percent correctly classified: 21.690%
+Training time: 45.320 seconds
+Testing time: 0.008 seconds
+
+Results for GA: 
+Correctly classified 487.0 instances.
+Incorrectly classified 3690.0 instances.
+Percent correctly classified: 11.659%
+Training time: 2264.639 seconds
+Testing time: 0.008 seconds
+
+
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 7, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1120.0 instances.
+Incorrectly classified 3057.0 instances.
+Percent correctly classified: 26.814%
+Training time: 49.427 seconds
+Testing time: 0.011 seconds
+
+Results for SA: 
+Correctly classified 1030.0 instances.
+Incorrectly classified 3147.0 instances.
+Percent correctly classified: 24.659%
+Training time: 50.255 seconds
+Testing time: 0.009 seconds
+
+Results for GA: 
+Correctly classified 634.0 instances.
+Incorrectly classified 3543.0 instances.
+Percent correctly classified: 15.178%
+Training time: 2590.992 seconds
+Testing time: 0.009 seconds
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 10, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 992.0 instances.
+Incorrectly classified 3185.0 instances.
+Percent correctly classified: 23.749%
+Training time: 56.396 seconds
+Testing time: 0.012 seconds
+
+Results for SA: 
+Correctly classified 997.0 instances.
+Incorrectly classified 3180.0 instances.
+Percent correctly classified: 23.869%
+Training time: 56.499 seconds
+Testing time: 0.010 seconds
+
+Results for GA: 
+Correctly classified 691.0 instances.
+Incorrectly classified 3486.0 instances.
+Percent correctly classified: 16.543%
+Training time: 2877.847 seconds
+Testing time: 0.010 seconds
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 15, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1049.0 instances.
+Incorrectly classified 3128.0 instances.
+Percent correctly classified: 25.114%
+Training time: 71.604 seconds
+Testing time: 0.015 seconds
+
+Results for SA: 
+Correctly classified 1006.0 instances.
+Incorrectly classified 3171.0 instances.
+Percent correctly classified: 24.084%
+Training time: 71.754 seconds
+Testing time: 0.013 seconds
+
+Results for GA: 
+Correctly classified 636.0 instances.
+Incorrectly classified 3541.0 instances.
+Percent correctly classified: 15.226%
+Training time: 3742.857 seconds
+Testing time: 0.013 seconds
+
+
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 20, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1029.0 instances.
+Incorrectly classified 3148.0 instances.
+Percent correctly classified: 24.635%
+Training time: 84.283 seconds
+Testing time: 0.017 seconds
+
+Results for SA: 
+Correctly classified 1022.0 instances.
+Incorrectly classified 3155.0 instances.
+Percent correctly classified: 24.467%
+Training time: 84.131 seconds
+Testing time: 0.014 seconds
+
+Results for GA: 
+Correctly classified 744.0 instances.
+Incorrectly classified 3433.0 instances.
+Percent correctly classified: 17.812%
+Training time: 4286.941 seconds
+Testing time: 0.015 seconds
+
+
+
+
+
+inputLayer = 7, hiddenLayer = 25, outputLayer = 29, trainingIterations = 3000;
+---------------------------
+
+Results for RHC: 
+Correctly classified 1009.0 instances.
+Incorrectly classified 3168.0 instances.
+Percent correctly classified: 24.156%
+Training time: 94.722 seconds
+Testing time: 0.018 seconds
+
+Results for SA: 
+Correctly classified 1032.0 instances.
+Incorrectly classified 3145.0 instances.
+Percent correctly classified: 24.707%
+Training time: 94.158 seconds
+Testing time: 0.016 seconds
+
+Results for GA: 
+Correctly classified 318.0 instances.
+Incorrectly classified 3859.0 instances.
+Percent correctly classified: 7.613%
+Training time: 4956.861 seconds
+Testing time: 0.017 seconds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MIMIC: iterations = 500, sample size = 10, keep size = 3, value = 0.03962445944379281
+MIMIC: iterations = 500, sample size = 10, keep size = 5, value = 0.039747180215478725
+MIMIC: iterations = 500, sample size = 10, keep size = 7, value = 0.042934346827474316
+MIMIC: iterations = 500, sample size = 10, keep size = 9, value = 0.04272245130939505
+MIMIC: iterations = 500, sample size = 50, keep size = 15, value = 0.080646829704048
+MIMIC: iterations = 500, sample size = 50, keep size = 25, value = 0.0745115749810881
+MIMIC: iterations = 500, sample size = 50, keep size = 35, value = 0.06455639091251546
+MIMIC: iterations = 500, sample size = 50, keep size = 45, value = 0.04365320888832136
+MIMIC: iterations = 500, sample size = 75, keep size = 22, value = 0.08769771944376678
+MIMIC: iterations = 500, sample size = 75, keep size = 37, value = 0.0873953649587169
+MIMIC: iterations = 500, sample size = 75, keep size = 52, value = 0.07354683515787919
+MIMIC: iterations = 500, sample size = 75, keep size = 67, value = 0.049059294445076417
+MIMIC: iterations = 500, sample size = 100, keep size = 30, value = 0.09291344164257791
+MIMIC: iterations = 500, sample size = 100, keep size = 50, value = 0.07686529298752395
+MIMIC: iterations = 500, sample size = 100, keep size = 70, value = 0.06491912775120971
+MIMIC: iterations = 500, sample size = 100, keep size = 90, value = 0.049176447369376916
+MIMIC: iterations = 500, sample size = 200, keep size = 60, value = 0.09854946142537079
+MIMIC: iterations = 500, sample size = 200, keep size = 100, value = 0.09186958833576253
+MIMIC: iterations = 500, sample size = 200, keep size = 140, value = 0.07622917156733051
+MIMIC: iterations = 500, sample size = 200, keep size = 180, value = 0.05890120351932063
+
+MIMIC: iterations = 1000, sample size = 10, keep size = 3, value = 0.046373701417718974
+MIMIC: iterations = 1000, sample size = 10, keep size = 5, value = 0.04399020211399127
+MIMIC: iterations = 1000, sample size = 10, keep size = 7, value = 0.04278714893798579
+MIMIC: iterations = 1000, sample size = 10, keep size = 9, value = 0.04107811716882649
+MIMIC: iterations = 1000, sample size = 50, keep size = 15, value = 0.10475410743264991
+MIMIC: iterations = 1000, sample size = 50, keep size = 25, value = 0.09021631762186039
+MIMIC: iterations = 1000, sample size = 50, keep size = 35, value = 0.07842404508955333
+MIMIC: iterations = 1000, sample size = 50, keep size = 45, value = 0.04585024224256387
+MIMIC: iterations = 1000, sample size = 75, keep size = 22, value = 0.10041157314975958
+MIMIC: iterations = 1000, sample size = 75, keep size = 37, value = 0.09159721037348087
+MIMIC: iterations = 1000, sample size = 75, keep size = 52, value = 0.08567424454053574
+MIMIC: iterations = 1000, sample size = 75, keep size = 67, value = 0.04925349912866018
+MIMIC: iterations = 1000, sample size = 100, keep size = 30, value = 0.10172507994857148
+MIMIC: iterations = 1000, sample size = 100, keep size = 50, value = 0.08176154981310911
+MIMIC: iterations = 1000, sample size = 100, keep size = 70, value = 0.07903446577952485
+MIMIC: iterations = 1000, sample size = 100, keep size = 90, value = 0.05567619369302627
+MIMIC: iterations = 1000, sample size = 200, keep size = 60, value = 0.09967774569082782
+MIMIC: iterations = 1000, sample size = 200, keep size = 100, value = 0.09087144467885473
+MIMIC: iterations = 1000, sample size = 200, keep size = 140, value = 0.07017875659748732
+MIMIC: iterations = 1000, sample size = 200, keep size = 180, value = 0.06353019080534864
+
+
+MIMIC: iterations = 1500, sample size = 10, keep size = 3, value = 0.05165629766246622
+MIMIC: iterations = 1500, sample size = 10, keep size = 5, value = 0.03978630753481636
+MIMIC: iterations = 1500, sample size = 10, keep size = 7, value = 0.04018636674069917
+MIMIC: iterations = 1500, sample size = 10, keep size = 9, value = 0.04048127560607499
+MIMIC: iterations = 1500, sample size = 50, keep size = 15, value = 0.09944875542535686
+MIMIC: iterations = 1500, sample size = 50, keep size = 25, value = 0.09349973466044458
+MIMIC: iterations = 1500, sample size = 50, keep size = 35, value = 0.07287640274380625
+MIMIC: iterations = 1500, sample size = 50, keep size = 45, value = 0.04381335361616665
+MIMIC: iterations = 1500, sample size = 75, keep size = 22, value = 0.10653977418072304
+MIMIC: iterations = 1500, sample size = 75, keep size = 37, value = 0.09973237638973016
+MIMIC: iterations = 1500, sample size = 75, keep size = 52, value = 0.07361598000348259
+MIMIC: iterations = 1500, sample size = 75, keep size = 67, value = 0.05202183069838786
+MIMIC: iterations = 1500, sample size = 100, keep size = 30, value = 0.09588019767857317
+MIMIC: iterations = 1500, sample size = 100, keep size = 50, value = 0.07700629250717017
+MIMIC: iterations = 1500, sample size = 100, keep size = 70, value = 0.08019999604379878
+MIMIC: iterations = 1500, sample size = 100, keep size = 90, value = 0.05813495949097251
+MIMIC: iterations = 1500, sample size = 200, keep size = 60, value = 0.10653023030126138
+MIMIC: iterations = 1500, sample size = 200, keep size = 100, value = 0.10045415721838749
+MIMIC: iterations = 1500, sample size = 200, keep size = 140, value = 0.07695925600550792
+MIMIC: iterations = 1500, sample size = 200, keep size = 180, value = 0.06231940634459968
+
+
